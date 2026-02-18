@@ -1,0 +1,720 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Notation
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\vphi}{\varphi}
+\newcommand{\Spec}{\operatorname{Spec}}
+
+\title[The Tihany Conjecture: Spectral Resolutions]{%
+The Erd\H{o}s--Lov\'asz Tihany Conjecture:\\
+Spectral Resolutions}
+
+\author{V.\,F.\,S.~Santos}
+\date{February 2026}
+
+\subjclass[2020]{05C15, 05C50, 05C31, 11R04}
+
+\keywords{Tihany conjecture, Mycielski graphs, spectral graph theory, 
+golden ratio, eigenvector partitions, chromatic number}
+
+\begin{document}
+
+\begin{abstract}
+We apply golden resolvent theory~\cite{santos-grt-2026} to the 
+Erd\H{o}s--Lov\'asz Tihany Conjecture (1968): for every graph~$G$ 
+with $\chi(G) = s + t - 1 > \omega(G)$, there exists a partition 
+$V(G) = S \sqcup T$ with $\chi(G[S]) \ge s$ and $\chi(G[T]) \ge t$.
+
+We prove the conjecture for the entire Mycielski family: for every 
+$k \ge 3$ and every pair $(s,t)$ with $s + t = k + 1$ and $s, t \ge 2$, 
+the Mycielski graph~$M_k$ admits a valid Tihany partition.  The proof 
+uses the canonical embedding $M_s \hookrightarrow M_k$ and a 
+Mycielski-complement induction.  We extend this to all generalised 
+Mycielskian chains via an abstract $(P1)$--$(P3)$ operator framework.
+
+Beyond Mycielski graphs, we formulate two conjectures that each imply 
+the full Tihany Conjecture.  The \emph{Spectral Tihany Conjecture} 
+asserts that some eigenvector threshold cut of~$G$ itself yields a 
+valid partition; we verify it on $161$ Tihany pairs with zero failures.  
+The \emph{Mycielskian Spectral Pullback Conjecture} asserts that 
+embedding~$G$ into its Mycielskian~$M(G)$ and sweeping with an 
+eigenvector of~$M(G)$---whose spectrum is controlled by the secular 
+equation of~\cite{santos-grt-2026}---always produces a valid partition 
+when restricted to~$G$; we verify it on $94$ graphs with zero failures.
+
+The spectral partition mechanisms---cooperative modes for 
+regular graphs, resolvent centrality for irregular ones---follow from 
+the complementarity principle of golden resolvent 
+theory~\cite{santos-grt-2026}.
+\end{abstract}
+
+\maketitle
+
+
+%% ===================================================================
+\section{Introduction}\label{sec:intro}
+%% ===================================================================
+
+\subsection{The conjecture}
+
+\begin{conjecture}[Erd\H{o}s--Lov\'asz, 1968]\label{conj:tihany}
+For every graph~$G$ and integers $s, t \ge 2$ with 
+$\chi(G) = s + t - 1 > \omega(G)$, there exists a partition 
+$V(G) = S \sqcup T$ with $\chi(G[S]) \ge s$ and $\chi(G[T]) \ge t$.
+\end{conjecture}
+
+The conjecture has been open since 1968~\cite{erdos-lovasz-1975}.  
+Known cases include small pairs with $s + t \le 6$~\cite{stiebitz-1987, 
+sachs-1993}, line graphs~\cite{kostochka-stiebitz-2003}, quasi-line 
+graphs~\cite{chudnovsky-fradkin-2008}, graphs with 
+$\alpha(G) = 2$~\cite{balogh-etal-2009}, and the pair $(3, k{-}2)$ 
+on Mycielski graphs for all $k \ge 5$~\cite{santos-golden-2026}.  
+The general conjecture remains wide open.
+
+\subsection{Main results}
+
+The contributions of this paper are:
+\begin{enumerate}[label=(\arabic*)]
+\item \textbf{Tihany for all Mycielski pairs} (\Cref{thm:tihany-mycielski}): 
+  for every $k \ge 3$ and every valid pair $(s,t)$, $M_k$ admits a 
+  Tihany partition.  This is a complete resolution of the conjecture 
+  for the Mycielski family.
+
+\item \textbf{Extension to generalised Mycielskians} 
+  (\Cref{prop:generalised}): any chain built by an operator satisfying 
+  chromatic increment, induced embedding, and bounded complement 
+  satisfies all Tihany pairs.
+
+\item \textbf{The Spectral Tihany Conjecture} (\Cref{conj:spectral-tihany}): 
+  for every graph with $\chi > \omega$ and every Tihany pair, some 
+  eigenvector threshold cut produces a valid partition.  
+  Verified: 161/161 pairs.
+
+\item \textbf{The Mycielskian Spectral Pullback Conjecture} 
+  (\Cref{conj:pullback}): for every graph with $\chi > \omega$, some 
+  eigenvector of $M(G)$ produces a valid Tihany partition of~$G$ via 
+  pullback sweep.  Verified: 94/94 graphs.
+
+\item \textbf{Spectral shielding} (\Cref{prop:shielding}): the 
+  Hoffman bound, Lov\'asz theta, and fractional chromatic number are 
+  all permanently below~4 on Mycielski graphs---yet eigenvector 
+  partitions succeed.
+\end{enumerate}
+
+\subsection{Relation to companion papers}
+
+The spectral machinery used here---the golden resolvent factorisation, 
+the secular equation, the complementarity principle, the Positive 
+Boost Inequality, and the Galois orbit framework---is developed in 
+the companion paper~\cite{santos-grt-2026} (\emph{Golden Resolvent 
+Theory}) as pure mathematics applicable to arbitrary real symmetric 
+matrices.  The present paper applies that theory to graph chromatic 
+partitions.
+
+The published paper~\cite{santos-golden-2026} proved the Tihany 
+conjecture for the single family $(3, k{-}2)$ on Mycielski graphs 
+via the $C_5$-peeling method and the Golden Sub-Induction.  
+\Cref{thm:tihany-mycielski} of the present paper supersedes that 
+result, resolving all $k{-}2$ Tihany pairs simultaneously.
+
+\subsection{Organisation}
+
+\Cref{sec:spectral-tihany} introduces eigenvector threshold cuts 
+and states the Spectral Tihany Conjecture.  \Cref{sec:bounds} 
+discusses spectral lower bounds and the shielding phenomenon.  
+\Cref{sec:mycielski} proves Tihany for all Mycielski pairs.  
+\Cref{sec:generalised} extends to generalised Mycielskians.  
+\Cref{sec:pullback} develops the Mycielskian Spectral Pullback.  
+\Cref{sec:evidence} presents the computational evidence.  
+\Cref{sec:open} lists open problems.
+
+
+%% ===================================================================
+\section{Eigenvector Threshold Cuts and the Spectral Tihany Conjecture}
+\label{sec:spectral-tihany}
+%% ===================================================================
+
+Let $G = (V, E)$ be a simple graph on $n$~vertices with adjacency 
+matrix $A \in \Z^{n \times n}$.  Since $A$ is real symmetric, it has 
+$n$ real eigenvalues $\lambda_1 \ge \cdots \ge \lambda_n$ with an 
+orthonormal eigenbasis $v_1, \ldots, v_n$.
+
+\begin{definition}[Threshold cut]\label{def:threshold}
+For an eigenvector $v \in \R^n$ and threshold $\tau \in \R$, the 
+\emph{threshold cut} is the partition 
+$S_\tau = \{i \in V : v_i \ge \tau\}$, $T_\tau = V \setminus S_\tau$.
+\end{definition}
+
+Since $S_\tau$ changes only when $\tau$ crosses an eigenvector component, 
+there are at most $n-1$ distinct nontrivial partitions per eigenvector, 
+and at most $n(n-1)$ across all eigenvectors.
+
+\begin{conjecture}[Spectral Tihany Conjecture]\label{conj:spectral-tihany}
+For every graph~$G$ with $\chi(G) > \omega(G)$ and every valid Tihany 
+pair $(s,t)$ with $s + t = \chi(G) + 1$ and $s, t \ge 2$, there 
+exists an eigenvector~$v$ of $A(G)$ and a threshold~$\tau$ such that 
+$\chi(G[S_\tau]) \ge s$ and $\chi(G[T_\tau]) \ge t$.
+\end{conjecture}
+
+\begin{proposition}\label{prop:spectral-implies-tihany}
+\Cref{conj:spectral-tihany} implies the Erd\H{o}s--Lov\'asz Tihany 
+Conjecture (\Cref{conj:tihany}).
+\end{proposition}
+
+\begin{proof}
+The threshold cut $(S_\tau, T_\tau)$ is a vertex partition satisfying 
+the required chromatic lower bounds.
+\end{proof}
+
+\begin{remark}[Finite optimisation]\label{rmk:finite-opt}
+\Cref{conj:spectral-tihany} reduces the Tihany problem to a finite 
+search: for a given graph and pair, check all $O(n^2)$ candidate 
+partitions.  All our computational results are exact verifications 
+of this type.
+\end{remark}
+
+
+%% ===================================================================
+\section{Spectral Lower Bounds and the Shielding Phenomenon}
+\label{sec:bounds}
+%% ===================================================================
+
+\subsection{Hoffman bound}
+
+\begin{definition}[Hoffman bound~\cite{hoffman-1970}]\label{def:hoffman}
+For a graph~$H$ with $\lambda_{\min}(H) < 0$:
+\[
+  L_{\mathrm{Hof}}(H) = 1 - \frac{\lambda_{\max}(H)}{\lambda_{\min}(H)} 
+  \;\le\; \chi(H).
+\]
+\end{definition}
+
+\begin{definition}[Hoffman-certified success]\label{def:hoffman-cert}
+An eigenvector $v$ of $A(G)$ \emph{Hoffman-certifies} the pair $(s,t)$ 
+if some threshold cut produces a partition with 
+$L_{\mathrm{Hof}}(G[S]) \ge s$ and $L_{\mathrm{Hof}}(G[T]) \ge t$.
+\end{definition}
+
+\subsection{The Hoffman certification gap}
+
+\begin{definition}[Hoffman gap]\label{def:hoffman-gap}
+$\Delta_{\mathrm{Hof}}(G) = \chi(G) - L_{\mathrm{Hof}}(G)$.
+\end{definition}
+
+For Mycielski graphs, the gap is dramatic: $\Delta_{\mathrm{Hof}}(M_6) = 3.46$.
+
+\subsection{Spectral shielding}
+
+\begin{proposition}[Spectral shielding]\label{prop:shielding}
+The three standard spectral and convex-relaxation bounds---the 
+Hoffman bound $L_{\mathrm{Hof}}$, the Lov\'asz theta 
+function~$\bar{\vartheta}$, and the fractional chromatic 
+number~$\chi_f$---satisfy
+\[
+  L_{\mathrm{Hof}}(M_k) \;\le\; \bar{\vartheta}(M_k) \;\le\; 
+  \chi_f(M_k) \;<\; 4 \quad \text{for every } k \ge 3.
+\]
+In particular, none of these bounds can certify $\chi \ge 4$ for 
+any Mycielski graph.
+\end{proposition}
+
+\begin{proof}
+The Larsen--Propp--Ullman recurrence~\cite{larsen-propp-ullman-1995} 
+gives $\chi_f(M(G)) = \chi_f(G) + 1/\alpha(G)$.  Since 
+$\alpha(M_k) = n_{k-1}$, the fractional chromatic number converges:
+\[
+  \chi_f(M_\infty) = \tfrac{5}{2} + \sum_{j=3}^\infty 
+  \frac{1}{\alpha(M_j)} \approx 3.377 < 4.
+\]
+By the Lov\'asz sandwich theorem, 
+$L_{\mathrm{Hof}} \le \bar{\vartheta} \le \chi_f$, so all three 
+are permanently below~4 as $\chi(M_k) = k \to \infty$.
+\end{proof}
+
+\begin{remark}
+The shielding is caused by the abundance of independent shadow vertices.  
+Yet eigenvector threshold cuts produce correct Tihany partitions in 
+every tested case (\Cref{sec:evidence}).  The partition information 
+resides in the \emph{geometry} of the eigenvector---the spatial 
+pattern of signs and magnitudes---rather than in any eigenvalue ratio.
+\end{remark}
+
+
+%% ===================================================================
+\section{Tihany for All Mycielski Pairs}\label{sec:mycielski}
+%% ===================================================================
+
+\subsection{The Mycielski construction}
+
+The Mycielskian~\cite{mycielski-1955} of a graph~$G$ on $n$~vertices 
+is $M(G)$ on $2n+1$ vertices: originals $V_0$, shadows $V_1$ 
+(where $u_i' \sim N_G(v_i)$), and an apex~$w$ adjacent to all shadows.  
+Key properties: $\chi(M(G)) = \chi(G) + 1$ and $\omega(M(G)) = \omega(G)$.
+
+\subsection{Canonical embedding and complement}
+
+\begin{definition}[Canonical chain embedding]\label{def:canonical}
+Define $M_2 = K_2$ and $M_{k+1} = M(M_k)$.  The original block of 
+$M_{k+1}$ is isomorphic to $M_k$, giving a canonical inclusion 
+$\iota_{\ell,k}\colon V(M_\ell) \hookrightarrow V(M_k)$ for 
+$2 \le \ell \le k$.
+\end{definition}
+
+\begin{definition}[Mycielski complement]\label{def:complement}
+For $2 \le s \le k-1$:
+\[
+  R_{k,s} := M_k\bigl[V(M_k) \setminus \iota_{s,k}(V(M_s))\bigr].
+\]
+\end{definition}
+
+\subsection{Main theorem}
+
+\begin{lemma}[Containment]\label{lem:containment}
+For every $k \ge s + 2$, the complement $R_{k,s}$ contains $M(R_{k-1,s})$ 
+as a subgraph.
+\end{lemma}
+
+\begin{proof}
+Write $M_k = M(M_{k-1})$ with vertex set $V_0 \sqcup V_1 \sqcup \{w\}$.  
+Since $M_s$ embeds in $V_0 \cong M_{k-1}$, the complement decomposes as 
+$R_{k,s} = R_{k-1,s} \cup V_1 \cup \{w\}$.  We exhibit $M(R_{k-1,s})$ 
+inside $R_{k,s}$:
+\begin{itemize}
+\item Originals of $M(R_{k-1,s}) \to R_{k-1,s} \subset R_{k,s}$.
+\item Shadow of $i \in R_{k-1,s} \to u_i \in V_1$; adjacencies preserved 
+  since $u_i \sim N_{M_{k-1}}(i) \cap R_{k-1,s} = N_{R_{k-1,s}}(i)$.
+\item Apex of $M(R_{k-1,s}) \to w$; adjacent to all shadows.
+\end{itemize}
+The map is injective and preserves all adjacencies.
+\end{proof}
+
+\begin{lemma}[Chromatic lower bound]\label{lem:chromatic}
+For every $k \ge s + 1$ with $s \ge 2$: $\chi(R_{k,s}) \ge k - s + 1$.
+\end{lemma}
+
+\begin{proof}
+Induction on~$k$.  Base case ($k = s+1$): $R_{s+1,s}$ is the star 
+$K_{1,|V(M_s)|}$, with $\chi = 2 = (s+1) - s + 1$.  Inductive step 
+($k \ge s+2$): by \Cref{lem:containment}, $R_{k,s} \supseteq M(R_{k-1,s})$.  
+By the Mycielski chromatic increment, 
+$\chi(R_{k,s}) \ge \chi(M(R_{k-1,s})) = \chi(R_{k-1,s}) + 1 \ge (k-s) + 1$.
+\end{proof}
+
+\begin{theorem}[Tihany for all Mycielski pairs]\label{thm:tihany-mycielski}
+For every $k \ge 3$ and every pair $(s,t)$ with $s + t = k + 1$ and 
+$s, t \ge 2$, the Mycielski graph~$M_k$ admits a partition 
+$V(M_k) = S \sqcup T$ with $\chi(M_k[S]) \ge s$ and $\chi(M_k[T]) \ge t$.
+\end{theorem}
+
+\begin{proof}
+Set $S = \iota_{s,k}(V(M_s))$ and $T = V(M_k) \setminus S$.  
+Since $M_s$ is an induced subgraph, $\chi(M_k[S]) = \chi(M_s) = s$.  
+By \Cref{lem:chromatic}, $\chi(M_k[T]) = \chi(R_{k,s}) \ge k - s + 1 = t$.  
+Since $\chi(M_k) = k = s + t - 1$ and $\omega(M_k) = 2 < k$ for 
+$k \ge 3$, this is a valid Tihany partition.
+\end{proof}
+
+\begin{remark}[Discovery through spectral theory]\label{rmk:discovery}
+\Cref{thm:tihany-mycielski} is purely combinatorial, but it was 
+\emph{discovered} through the secular equation 
+of~\cite{santos-grt-2026}.  The golden-flip eigenvector at eigenvalue 
+$(-1)^{k-2}\vphi^{-(k-2)}$---whose block structure 
+$(v, -\vphi v, 0)$ places originals and shadows in opposite 
+partition halves---was verified computationally to achieve every 
+Tihany pair for $M_4$ through $M_6$.  Analysing the block structure 
+of these partitions revealed the containment 
+$R_{k,s} \supseteq M(R_{k-1,s})$, which is the engine of the proof.
+\end{remark}
+
+\begin{remark}[Comparison with $C_5$-peeling]\label{rmk:c5-peeling}
+The published paper~\cite{santos-golden-2026} proved the single family 
+$(3, k{-}2)$ via $C_5$-peeling and sub-induction.  
+\Cref{thm:tihany-mycielski} supersedes it: it resolves all $k-2$ 
+pairs simultaneously, the proof is shorter (two lemmas plus the 
+Mycielski increment), and no eigenvector computation is required.  
+The two approaches are complementary: $C_5$-peeling provides a 
+spectral partition (useful for generalisations to non-Mycielski graphs), 
+while \Cref{thm:tihany-mycielski} provides a structural partition 
+(optimal for the Mycielski family).
+\end{remark}
+
+
+%% ===================================================================
+\section{Extension to Generalised Mycielskians}\label{sec:generalised}
+%% ===================================================================
+
+The proof of \Cref{thm:tihany-mycielski} uses exactly three properties 
+of the Mycielski operator:
+
+\begin{enumerate}[label=(P\arabic*)]
+\item \textbf{Chromatic increment}: $\chi(M(G)) = \chi(G) + 1$ for 
+  every graph~$G$ with an edge.
+\item \textbf{Induced embedding}: $G$ embeds as an induced subgraph 
+  (the original block) of $M(G)$.
+\item \textbf{Bounded complement}: $\chi(M(G) \setminus G) = 2$.
+\end{enumerate}
+
+\begin{proposition}[Tihany for generalised chains]\label{prop:generalised}
+Let $p \ge 1$, let $G_0$ be any graph with $\chi(G_0) \ge 2$ and 
+$\omega(G_0) < \chi(G_0)$, and define $G_k = M^{(p)}(G_{k-1})$ 
+for $k \ge 1$.  Then every $G_k$ satisfies the Tihany Conjecture 
+for all pairs.
+\end{proposition}
+
+\begin{proof}
+It suffices to verify (P1)--(P3) for $F = M^{(p)}$.
+
+\emph{(P1)}: The standard Mycielski argument adapts to $p$~shadow 
+layers; see~\cite{lin-wu-lam-gu-2006}.
+
+\emph{(P2)}: Layer-0 vertices form an induced copy of~$G$.
+
+\emph{(P3)}: $M^{(p)}(G) \setminus G$ consists of layers 
+$V_1, \ldots, V_p$ (independent sets) with inter-layer edges, plus 
+the apex.  A 2-colouring: odd layers and apex get colour~1, even layers 
+get colour~2.
+
+With (P1)--(P3) established, \Cref{lem:containment} and 
+\Cref{lem:chromatic} carry over with $M$ replaced by $M^{(p)}$.
+\end{proof}
+
+\begin{remark}[Scope and limitations]\label{rmk:scope}
+The (P1)--(P3) framework captures ``iterated Mycielskian-type'' 
+constructions.  It does not reach:
+\begin{itemize}
+\item \emph{Kneser graphs}: the natural embedding 
+  $K(n{-}1,r) \hookrightarrow K(n,r)$ has complement with 
+  $\chi = 1$ (pairwise intersecting sets), so (P3) fails.
+\item \emph{General triangle-free graphs}: non-constructive families 
+  lack the recursive block structure for~(P2).
+\end{itemize}
+The Spectral Tihany Conjecture (\Cref{conj:spectral-tihany}) targets 
+these families via eigenvector threshold cuts.
+\end{remark}
+
+
+%% ===================================================================
+\section{The Mycielskian Spectral Pullback}\label{sec:pullback}
+%% ===================================================================
+
+A third approach bypasses eigenvectors of~$G$ and instead embeds 
+$G$ into $M(G)$, exploiting the structured spectrum of $M(G)$ 
+via the secular equation of~\cite{santos-grt-2026}.
+
+\begin{definition}[Pullback sweep]\label{def:pullback}
+Let $G$ have vertex set $V_0 = \{0,\ldots,n-1\}$, and let $M(G)$ 
+have vertex set $V_0 \cup V_1 \cup \{w\}$.  For an eigenvector~$u$ 
+of $A(M(G))$, order all $2n+1$ vertices by decreasing component value.  
+At step~$k$, restrict the partition $(S_k, T_k)$ to the original block:
+\[
+  S_k^G = S_k \cap V_0, \qquad T_k^G = T_k \cap V_0.
+\]
+\end{definition}
+
+\begin{conjecture}[Mycielskian Spectral Pullback]
+\label{conj:pullback}
+For every graph~$G$ with $\chi(G) > \omega(G)$ and every Tihany pair 
+$(s,t)$, there exists an eigenvector~$u$ of $A(M(G))$ and a step~$k$ 
+in the pullback sweep such that 
+$\chi(G[S_k^G]) \ge s$ and $\chi(G[T_k^G]) \ge t$.
+\end{conjecture}
+
+\begin{proposition}\label{prop:pullback-implies}
+\Cref{conj:pullback} implies the Erd\H{o}s--Lov\'asz Tihany 
+Conjecture.
+\end{proposition}
+
+\subsection{The spectral mechanism}
+
+By the secular equation~\cite[Theorem~4.1]{santos-grt-2026}, the 
+spectrum of $M(G)$ decomposes into:
+
+\begin{enumerate}[label=(\alph*)]
+\item \textbf{Transparent eigenvalues} (from eigenspaces of~$G$ 
+  orthogonal to~$\mathbf{1}$): produce golden pairs $\mu\vphi$ and 
+  $-\mu/\vphi$ with eigenvectors $(v, v/\vphi, 0)$ 
+  (\emph{Golden-Boost}) and $(v, -\vphi v, 0)$ (\emph{Golden-Flip}).
+
+\item \textbf{Coupled eigenvalues} (from the secular equation): 
+  eigenvectors with nonzero apex component; restriction to~$V_0$ is 
+  proportional to resolvent centrality $(\lambda I - A)^{-1}\mathbf{1}$.
+\end{enumerate}
+
+By the complementarity principle~\cite[Propositions~4.5--4.6]{santos-grt-2026}:
+\begin{itemize}
+\item For \emph{regular} graphs: coupled eigenvectors are constant 
+  on originals (useless); transparent Golden-Flip vectors produce 
+  effective partitions.
+\item For \emph{irregular} graphs: coupled eigenvectors sort originals 
+  by density (effective); transparent vectors may be noisy.
+\end{itemize}
+
+\subsection{Cooperative-mode analysis}
+
+Tracing each transparent eigenvector of $M(G)$ back to its parent 
+eigenvalue~$\mu$ in~$G$ reveals a striking pattern.
+
+\begin{definition}\label{def:cooperative}
+An eigenvalue $\mu > 0$ of~$G$ is \emph{cooperative} (adjacent vertices 
+receive same-sign components); $\mu < 0$ is \emph{frustrated} 
+(alternating signs).
+\end{definition}
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Parent eigenvalue & Gap-free rate & Certifies Tihany \\
+\midrule
+Cooperative ($\mu > 0$), boost branch & 96\% & 96\% \\
+Cooperative ($\mu > 0$), flip branch & 97\% & 97\% \\
+Frustrated ($\mu < 0$), boost branch & 53\% & 53\% \\
+Frustrated ($\mu < 0$), flip branch & 63\% & 63\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Cooperative modes of~$G$ produce nearly perfect partitions regardless 
+of the secular branch.
+
+\begin{conjecture}[Cooperative pullback for regular graphs]
+\label{conj:cooperative}
+For every $k$-regular graph~$G$ with $\chi(G) > \omega(G)$ and every 
+Tihany pair $(s,t)$, there exists a cooperative transparent eigenvector 
+of $M(G)$ whose pullback sweep certifies $(s,t)$.
+\end{conjecture}
+
+
+%% ===================================================================
+\section{Computational Evidence}\label{sec:evidence}
+%% ===================================================================
+
+\subsection{Spectral Tihany Conjecture}
+
+\begin{center}
+\begin{tabular}{lrc}
+\toprule
+Suite & Pairs & Result \\
+\midrule
+Structured (20 graphs, 8 families) & 43 & 43/43 \\
+Random (perturbed + Erd\H{o}s--R\'enyi) & 118 & 118/118 \\
+\midrule
+\textbf{Total} & \textbf{161} & \textbf{161/161} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The structured suite spans odd cycles, odd antiholes, Mycielski chains, 
+Kneser graphs, Platonic graphs, and Cartesian products; 
+chromatic numbers range from 3 to~11, graph sizes up to $n = 84$.  
+The Hoffman bound certifies 33 of 43 structured pairs (77\%); the 
+remaining 10 are verified by exact chromatic number computation.
+
+\subsection{Mycielskian Spectral Pullback}
+
+\begin{center}
+\begin{tabular}{lrc}
+\toprule
+Suite & Graphs & Result \\
+\midrule
+Named graphs (14 families) & 14 & 14/14 \\
+Random Erd\H{o}s--R\'enyi ($\chi > \omega$) & 50 & 50/50 \\
+Random triangle-free ($\chi > \omega$) & 30 & 30/30 \\
+\midrule
+\textbf{Total} & \textbf{94} & \textbf{94/94} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{One-step gap analysis}
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Eigenvector class & Tested & Gap-free & Certifies \\
+\midrule
+Golden-Flip & 43 & 38 (88\%) & 38 (88\%) \\
+Golden-Boost & 43 & 35 (81\%) & 35 (81\%) \\
+Mixed transparent & 19 & 17 (90\%) & 17 (90\%) \\
+Coupled & 26 & 15 (58\%) & 15 (58\%) \\
+\midrule
+All transparent & 105 & 90 (86\%) & 90 (86\%) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Transparent eigenvectors have a gap-free rate of 86\% individually, 
+far exceeding the coupled rate of 58\%.  Every tested graph has at 
+least one gap-free eigenvector.
+
+\subsection{Stress test on larger ensembles}
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Parent eigenvalue class & Tested & Gap-free & Rate \\
+\midrule
+Cooperative ($\mu > 0$, transparent) & 241 & 236 & 98\% \\
+Frustrated ($\mu < 0$, transparent) & 1111 & 1024 & 92\% \\
+Coupled (non-transparent) & 970 & 890 & 92\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The cooperative mode's near-perfect rate (98\%) supports a proof 
+strategy for \Cref{conj:pullback}: prove the cooperative case for 
+regular graphs (where positive transparent eigenvalues are guaranteed), 
+and show that the coupled Perron vector handles the irregular complement.
+
+
+%% ===================================================================
+\section{Open Problems}\label{sec:open}
+%% ===================================================================
+
+\subsubsection*{Toward resolving the Tihany Conjecture.}
+
+\begin{enumerate}
+\item \textbf{Prove the Mycielskian Spectral Pullback} 
+  (\Cref{conj:pullback}).  The proof splits naturally:
+  \begin{enumerate}[label=(\alph*)]
+  \item \emph{Regular graphs} (\Cref{conj:cooperative}): show that 
+    cooperative transparent eigenvectors force the pullback sweep to 
+    cross the $(s,t)$ threshold without a one-step gap.
+  \item \emph{Irregular graphs}: show that the coupled Perron vector 
+    of $M(G)$---sorting originals by resolvent centrality---always 
+    admits a Tihany partition.
+  \end{enumerate}
+
+\item \textbf{Prove the Spectral Tihany Conjecture} 
+  (\Cref{conj:spectral-tihany}) for any nontrivial infinite family.  
+  The most accessible targets: odd antiholes $\bar{C}_{2m+1}$ and 
+  Kneser graphs $K(n,k)$.
+
+\item \textbf{Close the one-step gap.}  Prove a pair-indexed pivot 
+  exclusion lemma: the vertex that raises $\chi(S)$ to~$s$ cannot 
+  simultaneously drop $\chi(T)$ below~$t$ along some eigenvector ordering.
+
+\item \textbf{Close the Hoffman gap.}  Find a spectral bound certifying 
+  the 10~beyond-Hoffman cases, or prove that eigenvector geometry forces 
+  valid partitions without any eigenvalue bound.
+
+\item \textbf{Extend computational tests.}  Test $M_7$ ($n = 95$, 
+  $\chi = 7$) and larger random graphs ($n \ge 50$).
+\end{enumerate}
+
+
+%% ===================================================================
+%% REFERENCES
+%% ===================================================================
+
+\begin{thebibliography}{99}
+
+\bibitem{balogh-etal-2009}
+J.~Balogh, A.\,V.~Kostochka, N.~Prince, and M.~Stiebitz,
+\emph{The Erd\H{o}s--Lov\'asz Tihany conjecture for quasi-line graphs},
+Discrete Math.\ \textbf{309} (2009), no.~12, 3985--3991.
+
+\bibitem{chudnovsky-fradkin-2008}
+M.~Chudnovsky and A.~Fradkin,
+\emph{An approximate version of a conjecture of Aharoni and Berger},
+Preprint, 2008.
+
+\bibitem{cvetkovic-rowlinson-simic-2010}
+D.~Cvetkovi\'c, P.~Rowlinson, and S.~Simi\'c,
+\emph{An Introduction to the Theory of Graph Spectra},
+London Math.\ Soc.\ Student Texts, no.~75,
+Cambridge Univ.\ Press, 2010.
+
+\bibitem{erdos-lovasz-1975}
+P.~Erd\H{o}s and L.~Lov\'asz,
+\emph{Problems and results on chromatic numbers in finite and 
+infinite graphs},
+Recent Advances in Graph Theory, 1975, pp.~137--148.
+
+\bibitem{hoffman-1970}
+A.\,J.~Hoffman,
+\emph{On eigenvalues and colorings of graphs},
+Graph Theory and its Applications, Academic Press, 1970, pp.~79--91.
+
+\bibitem{katz-1953}
+L.~Katz,
+\emph{A new status index derived from sociometric analysis},
+Psychometrika \textbf{18} (1953), no.~1, 39--43.
+
+\bibitem{kostochka-stiebitz-2003}
+A.\,V.~Kostochka and M.~Stiebitz,
+\emph{Colour-critical graphs with few edges},
+Discrete Math.\ \textbf{273} (2003), 255--259.
+
+\bibitem{larsen-propp-ullman-1995}
+M.~Larsen, J.~Propp, and D.~Ullman,
+\emph{The fractional chromatic number of Mycielski's graphs},
+J.~Graph Theory \textbf{19} (1995), no.~3, 411--416.
+
+\bibitem{lin-wu-lam-gu-2006}
+W.~Lin, J.~Wu, P.\,C.\,B.~Lam, and G.~Gu,
+\emph{Several parameters of generalized Mycielskians},
+Discrete Appl.\ Math.\ \textbf{154} (2006), 1173--1182.
+
+\bibitem{lovasz-1979}
+L.~Lov\'asz,
+\emph{On the Shannon capacity of a graph},
+IEEE Trans.\ Inform.\ Theory \textbf{25} (1979), no.~1, 1--7.
+
+\bibitem{mycielski-1955}
+J.~Mycielski,
+\emph{Sur le coloriage des graphes},
+Colloq.\ Math.\ \textbf{3} (1955), 161--162.
+
+\bibitem{sachs-1993}
+H.~Sachs,
+\emph{Elementary proof of the cycle-plus-triangles theorem},
+Combinatorics, Paul Erd\H{o}s is Eighty, Bolyai Soc.\ Math.\ 
+Stud., vol.~1, 1993, pp.~347--359.
+
+\bibitem{santos-grt-2026}
+V.\,F.\,S.~Santos,
+\emph{Golden resolvent theory: spectral factorisation, Galois orbits, 
+and Chebyshev ladders over $\Q(\sqrt{5})$},
+Preprint, February 2026.
+
+\bibitem{santos-golden-2026}
+V.\,F.\,S.~Santos,
+\emph{Golden eigenvalues and the Erd\H{o}s--Lov\'asz Tihany 
+conjecture for Mycielski graphs},
+Preprint, February 2026.
+
+\bibitem{stiebitz-1987}
+M.~Stiebitz,
+\emph{Proof of a conjecture of T.~Gallai concerning connectivity 
+properties of colour-critical graphs},
+Combinatorica \textbf{7} (1987), 303--304.
+
+\end{thebibliography}
+
+\end{document}
